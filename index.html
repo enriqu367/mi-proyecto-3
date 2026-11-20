@@ -2,65 +2,290 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Captura de Datos</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    table { border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #999; padding: 6px 12px; }
-    th { background: #eee; }
-    #seccionTabla { display: none; }
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --success: #10b981;
+      --success-hover: #059669;
+      --warning: #f59e0b;
+      --warning-hover: #d97706;
+      --danger: #ef4444;
+      --danger-hover: #dc2626;
+      --bg-body: #f1f5f9;
+      --bg-card: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      padding: 30px 15px;
+      line-height: 1.5;
+    }
+
+    .contenedor {
+      max-width: 750px;
+      margin: 0 auto;
+    }
+
+    .tarjeta {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--text-main);
+      border-bottom: 2px solid var(--bg-body);
+      padding-bottom: 10px;
+    }
+
+    .grupo-campo {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    input[type="number"],
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background-color: #f8fafc;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background-color: #ffffff;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .grupo-botones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: white;
+      transition: background-color 0.2s, transform 0.1s, opacity 0.2s;
+    }
+
+    button:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    #btnRegistrar { background-color: var(--success); }
+    #btnRegistrar:hover:not(:disabled) { background-color: var(--success-hover); }
+
+    #btnConsultar { background-color: var(--primary); }
+    #btnConsultar:hover:not(:disabled) { background-color: var(--primary-hover); }
+
+    #btnModificar { background-color: var(--warning); color: #fff; }
+    #btnModificar:hover:not(:disabled) { background-color: var(--warning-hover); }
+
+    #btnEliminar { background-color: var(--danger); }
+    #btnEliminar:hover:not(:disabled) { background-color: var(--danger-hover); }
+
+    #btnCerrar {
+      background-color: var(--text-muted);
+      padding: 6px 14px;
+      font-size: 0.85rem;
+    }
+    #btnCerrar:hover { background-color: #475569; }
+
+    /* Mensaje de estado */
+    #estado {
+      margin-top: 16px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--primary);
+      min-height: 24px;
+    }
+
+    /* Sección de Tabla */
+    #seccionTabla {
+      display: none;
+    }
+
+    .cabecera-tabla {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 2px solid var(--bg-body);
+      padding-bottom: 10px;
+    }
+
+    .cabecera-tabla h2 {
+      margin-bottom: 0;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    #buscador {
+      margin-bottom: 16px;
+    }
+
+    .tabla-responsive {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background-color: #f8fafc;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+    }
+
+    tbody tr:hover {
+      background-color: #f1f5f9;
+    }
+
+    /* Botones dentro de la tabla */
+    td button {
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      margin-right: 6px;
+    }
+
+    td button:first-child {
+      background-color: var(--warning);
+    }
+    td button:first-child:hover {
+      background-color: var(--warning-hover);
+    }
+
+    td button:last-child {
+      background-color: var(--danger);
+      margin-right: 0;
+    }
+    td button:last-child:hover {
+      background-color: var(--danger-hover);
+    }
   </style>
 </head>
 <body>
 
-  <h2>Captura de Datos</h2>
+  <div class="contenedor">
+    <!-- TARJETA DEL FORMULARIO -->
+    <div class="tarjeta">
+      <h2>Captura de Datos</h2>
 
-  <form id="formulario">
-    <input type="hidden" id="id">
+      <form id="formulario">
+        <input type="hidden" id="id">
 
-    <label for="dia">Dia:</label><br>
-    <input type="number" id="dia" ><br><br>
+        <div class="grupo-campo">
+          <label for="dia">Día:</label>
+          <input type="number" id="dia" placeholder="Ej. 15" required>
+        </div>
 
-    <label for="dolar">Dolar:</label><br>
-    <input type="number" id="dolar" ><br><br>
+        <div class="grupo-campo">
+          <label for="dolar">Dólar:</label>
+          <input type="number" step="any" id="dolar" placeholder="Ej. 18.50" required>
+        </div>
 
-    
-    <!-- >>> AGREGAR CAMPO NUEVO (lugar 1 de 6)
-         Copia un bloque label + input y cambia el nombre y el id.
-         Ejemplo:
-         <label for="telefono">Teléfono:</label><br>
-         <input type="text" id="telefono" required><br><br>
-    -->
+        <!-- >>> AGREGAR CAMPO NUEVO (lugar 1 de 6)
+             Copia un bloque div.grupo-campo y cambia el nombre y el id.
+             Ejemplo:
+             <div class="grupo-campo">
+               <label for="telefono">Teléfono:</label>
+               <input type="text" id="telefono" required>
+             </div>
+        -->
 
-    <button type="button" id="btnRegistrar">Registrar</button>
-    <button type="button" id="btnConsultar">Consultar</button>
-    <button type="button" id="btnModificar">Modificar</button>
-    <button type="button" id="btnEliminar">Eliminar</button>
-  </form>
+        <div class="grupo-botones">
+          <button type="button" id="btnRegistrar">Registrar</button>
+          <button type="button" id="btnConsultar">Consultar</button>
+          <button type="button" id="btnModificar">Modificar</button>
+          <button type="button" id="btnEliminar">Eliminar</button>
+        </div>
+      </form>
 
-  <p id="estado"></p>
+      <p id="estado"></p>
+    </div>
 
-  <div id="seccionTabla">
-    <h2>Registros</h2>
-    <button type="button" id="btnCerrar">Cerrar tabla</button>
-    <br><br>
-    <input type="text" id="buscador" placeholder="Buscar por nombre...">
+    <!-- TARJETA DE LA TABLA -->
+    <div id="seccionTabla" class="tarjeta">
+      <div class="cabecera-tabla">
+        <h2>Registros</h2>
+        <button type="button" id="btnCerrar">Cerrar tabla</button>
+      </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Dia</th>
-          <th>Dolar</th>
-        
-          <!-- >>> AGREGAR CAMPO NUEVO (lugar 2 de 6)
-               Agrega aquí el encabezado de la columna nueva.
-               Ejemplo: <th>Teléfono</th>
-          -->
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody id="tabla"></tbody>
-    </table>
+      <input type="text" id="buscador" placeholder="🔍 Buscar por día...">
+
+      <div class="tabla-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha / Registro</th>
+              <th>Día</th>
+              <th>Dólar</th>
+              <!-- >>> AGREGAR CAMPO NUEVO (lugar 2 de 6)
+                   Agrega aquí el encabezado de la columna nueva.
+                   Ejemplo: <th>Teléfono</th>
+              -->
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -78,8 +303,6 @@
     }
 
     // ---------- Botones activos según el estado ----------
-    // Registrar: solo si NO hay un registro cargado
-    // Modificar y Eliminar: solo si hay un registro cargado
     function actualizarBotones() {
       var hayRegistro = document.getElementById("id").value !== "";
       document.getElementById("btnRegistrar").disabled = hayRegistro;
@@ -103,11 +326,8 @@
 
         // >>> AGREGAR CAMPO NUEVO (lugar 3 de 6)
         // Cada campo termina con coma, EXCEPTO el último.
-        // Ejemplo con telefono:
-        //   cargo: document.getElementById("cargo").value,
-        //   telefono: document.getElementById("telefono").value
         dia: document.getElementById("dia").value,
-        dolar: document.getElementById("dolar").value,
+        dolar: document.getElementById("dolar").value
 
       }).then(function (respuesta) {
         terminarAccion(respuesta, "¡Registro guardado!");
@@ -140,7 +360,6 @@
       tabla.innerHTML = "";
 
       registros.forEach(function (reg) {
-        // Solo muestra los nombres que INICIAN con lo escrito
         if (!reg.dia.toString().toLowerCase().startsWith(filtro)) return;
 
         var tr = document.createElement("tr");
@@ -148,14 +367,13 @@
 
         // >>> AGREGAR CAMPO NUEVO (lugar 4 de 6)
         // Agrega una línea por cada campo, en el mismo orden que los <th>.
-        // Ejemplo: agregarCelda(tr, reg.telefono);
         agregarCelda(tr, reg.dia);
         agregarCelda(tr, reg.dolar);
 
         var td = document.createElement("td");
 
         var btnModificarFila = document.createElement("button");
-        btnModificarFila.textContent = "Modificar registro";
+        btnModificarFila.textContent = "Editar";
         btnModificarFila.onclick = function () { cargarEnFormulario(reg); };
 
         var btnEliminarFila = document.createElement("button");
@@ -191,16 +409,15 @@
 
       // >>> AGREGAR CAMPO NUEVO (lugar 5 de 6)
       // Agrega una línea por cada campo (aquí SÍ todas terminan en punto y coma).
-      // Ejemplo: document.getElementById("telefono").value = reg.telefono;
-      document.getElementById("dia").value = reg.nombre;
-      document.getElementById("dolar").value = reg.edad;
+      document.getElementById("dia").value = reg.dia;
+      document.getElementById("dolar").value = reg.dolar;
 
       document.getElementById("estado").textContent =
         "Modificando registro: cambia los datos y presiona Modificar";
       actualizarBotones();
 
-      window.scrollTo(0, 0);                     // sube al formulario
-      document.getElementById("nombre").focus(); // cursor en el nombre
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById("dia").focus();
     }
 
     // ---------- MODIFICAR ----------
@@ -208,7 +425,7 @@
       var id = document.getElementById("id").value;
 
       if (id === "") {
-        alert("Primero elige un registro con el botón 'Modificar registro'");
+        alert("Primero elige un registro con el botón 'Editar'");
         return;
       }
       if (!document.getElementById("formulario").reportValidity()) return;
@@ -220,12 +437,8 @@
 
         // >>> AGREGAR CAMPO NUEVO (lugar 6 de 6)
         // Igual que en REGISTRAR: coma en todos, menos en el último.
-        // Ejemplo con telefono:
-        //   cargo: document.getElementById("cargo").value,
-        //   telefono: document.getElementById("telefono").value
-        nombre: document.getElementById("nombre").value,
-        edad: document.getElementById("edad").value,
-        cargo: document.getElementById("cargo").value
+        dia: document.getElementById("dia").value,
+        dolar: document.getElementById("dolar").value
 
       }).then(function (respuesta) {
         terminarAccion(respuesta, "¡Registro modificado!");
@@ -251,7 +464,7 @@
       document.getElementById("estado").textContent =
         respuesta.ok ? mensajeOk : "Error: " + respuesta.mensaje;
       limpiarFormulario();
-      if (tablaVisible) cargarRegistros();  // refresca la tabla si está abierta
+      if (tablaVisible) cargarRegistros();
     }
 
     actualizarBotones();
